@@ -2,25 +2,25 @@ const express = require("express");
 const axios = require("axios");
 const { performance } = require('perf_hooks');
 
-class APM { // Class to handle all 
+class APM { // Class to handle/create new variable that can be used to for monitoring CPU usage and API metrics (so far)
     constructor(serviceName, backendURL, apiURL, apiKey) {
         this.serviceName = serviceName;
         this.backendURL = backendURL;
         this.apiURL = apiURL;
         this.apiKey = apiKey;
     }
-    static getCPUUsage () {
-        const totalMemory = os.totalMemory();
-        const freeMemory = os.freeMemory();
-        const usedMemory = totalMemory - freeMemory;
-        const memory = ((totalMemory / usedMemory) * 100).toFixed(2);
+    static getCPUUsage () { // function to get the CPU memory usage that your application could be using
+        const totalMemory = os.totalMemory(); // gets the total memory of the CPU
+        const freeMemory = os.freeMemory(); // gets the total free memory of the CPU
+        const usedMemory = totalMemory - freeMemory; // gets the total used memory by subtracting total by free memory
+        const memory = ((totalMemory / usedMemory) * 100).toFixed(2); // gets the actual memory and formats it to be more readable
 
-        return {
+        return { // return function to 
             memory: `${memory}`,
             cpuLoad: os.loadavg().toFixed(2)
         }
     }
-    async getAPILatency (apiURL, apiKey) { // function to get check the api latency of an api using preformance module
+    async getAPILatency (apiURL, apiKey) { // function to get check the api latency(delay) of an api using preformance module
         try {
             const startTime = performance.now(); // gets the current time of running function
             const headers = {}; // initially empty variable used to see if apiKey is something required
