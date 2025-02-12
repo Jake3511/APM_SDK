@@ -6,7 +6,7 @@ const apm = new APM("TestService", "http://localhost:3000", "https://api.divehar
 console.log("CPU Usage Test:");
 console.log(APM.getCPUUsage());
 
-// Test API Latency
+// Test API Latency and API Status
 (async () => {
     console.log("\nAPI Latency Test:");
     const latencyResult = await apm.getAPILatency();
