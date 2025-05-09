@@ -47,7 +47,7 @@ class APM { // Class to handle/create new variable that can be used to for monit
             headers["x-api-key"] = this.apiKey; // creates a header in order to check for the apiKey if one is required
         }
         try { // create a catch case where if the api response is successful, it returns a success
-            const response = await axios.get(this.apiURL, { headers }); //
+            const response = await axios.get(this.apiURL, { headers }); // save response of an api call in response to return status later
             console.log(`Request successful: ${response.status}`); // prints the response result
             return { success: true, status: response.status }; // returns the above result
         } 
@@ -56,5 +56,6 @@ class APM { // Class to handle/create new variable that can be used to for monit
             return { success: false, status: error.response ? error.response.status : "Network Error" }; // returns error message to caller
         }
     }
+    
 }
 module.exports = APM;
