@@ -4,9 +4,9 @@ const os = require("os");
 
 class APM { // Class to handle/create new variable that can be used to for monitoring CPU usage and API metrics (so far)
     #requestNumber = 0;
-    constructor(serviceName, backendURL = "", apiURL, apiKey = "") {
+    constructor(serviceName, apiURL, apiKey = "") {
         this.serviceName = serviceName;
-        this.backendURL = backendURL;
+        this.backendURL = "";
         this.apiURL = apiURL;
         this.apiKey = apiKey;
     }
@@ -39,6 +39,27 @@ class APM { // Class to handle/create new variable that can be used to for monit
         } 
         catch(error) {
             return {success: false, error: error.message}; // if not successful, return error message
+        }
+    }
+    async postUserConnection () {
+        try {
+            await axios.post(`${this.backendURL}/user-connected`, {
+                service: this.serviceName
+            });
+        }
+        catch (error) {
+            console.log("Failed to connect to redis server(user-connected)!");
+        }
+    }
+
+    async postUserDisconnected () {
+        try {
+            await axios.post(`${this.backendURL}/user-disconnected`, {
+                service: this.serviceName
+            })
+        }
+        catch (error) {
+            console.log("Failed to connect to redis server(user-disconnected)!");
         }
     }
     async checkAPIStatus () { // function to check the status of api's, calls your api with a key or not
