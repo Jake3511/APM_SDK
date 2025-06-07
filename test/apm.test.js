@@ -1,7 +1,7 @@
 const APM = require("../sdk_classes/apm");
 
 describe("APM Class Tests", () => {
-    const apm = new APM("TestService", "http://localhost:3000", "https://api.diveharder.com/v1/store_rotation");
+    const apm = new APM("TestService", "https://jsonplaceholder.typicode.com/posts");
 
     test("getCPUUsage returns a valid number between 0 and 100", () => {
         const result = APM.getCPUUsage();
@@ -27,5 +27,34 @@ describe("APM Class Tests", () => {
         expect(result.success).toBe(true);
         expect(result.status).toBe(200);
     });
+
+    test("postUserConnection", async () => {
+        apm.backendURL = "http://localhost:3000";
+
+        const result = await apm.postUserConnection();
+
+        expect(result).toHaveProperty("status");
+
+        expect(result.status.status).toBe(200);
+    })
+
+    test("postUserDisconnected", async () => {
+        apm.backendURL = "http://localhost:3000";
+
+        const result = await apm.postUserDisconnected();
+
+        expect(result).toHaveProperty("status");
+
+        expect(result.status.status).toBe(200);
+    })
+
+    test("getActiveUsers", async () => {
+        apm.backendURL = "http://localhost:3000";
+
+        const result = await apm.getActiveUsers();
+
+        expect(result).toBe(0)
+    })
+
 });
 

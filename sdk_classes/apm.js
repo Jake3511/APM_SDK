@@ -43,25 +43,42 @@ class APM { // Class to handle/create new variable that can be used to for monit
     }
     async postUserConnection () {
         try {
-            await axios.post(`${this.backendURL}/user-connected`, {
+            const status = await axios.post(`${this.backendURL}/user-connected`, {
                 service: this.serviceName
             });
+            return {status};
         }
         catch (error) {
             console.log("Failed to connect to redis server(user-connected)!");
+            return {error};
         }
     }
 
     async postUserDisconnected () {
         try {
-            await axios.post(`${this.backendURL}/user-disconnected`, {
+            const status = await axios.post(`${this.backendURL}/user-disconnected`, {
                 service: this.serviceName
             })
+            return {status};
         }
         catch (error) {
             console.log("Failed to connect to redis server(user-disconnected)!");
+            return {error};
         }
     }
+
+    async getActiveUsers() {
+        try {
+            const response = await axios.get(`${this.backendURL}/active-users`, {
+                params: {service: this.serviceName}
+            })
+            return response.data.count;
+        }
+        catch (error) {
+            console.log("Failed to connect to redis(active-users)")
+        }
+    }
+
     async checkAPIStatus () { // function to check the status of api's, calls your api with a key or not
         const headers = {}
         if (this.apiKey) {
