@@ -4,11 +4,12 @@ const os = require("os");
 
 class APM { // Class to handle/create new variable that can be used to for monitoring CPU usage and API metrics (so far)
     #requestNumber = 0;
-    constructor(serviceName, apiURL, apiKey = "") {
+    constructor(serviceName, apiURL, apiKey = "", userApiKey="") {
         this.serviceName = serviceName;
         this.backendURL = "";
         this.apiURL = apiURL;
         this.apiKey = apiKey;
+        this.userApiKey;
     }
     
     static getCPUUsage () { // function to get the CPU memory usage that your application could be using
@@ -84,9 +85,24 @@ class APM { // Class to handle/create new variable that can be used to for monit
         if (this.apiKey) {
             headers["x-api-key"] = this.apiKey; // creates a header in order to check for the apiKey if one is required
         }
+
         try { // create a catch case where if the api response is successful, it returns a success
             const response = await axios.get(this.apiURL, { headers }); // save response of an api call in response to return status later
             console.log(`Request successful: ${response.status}`); // prints the response result
+
+            // used for checking to see if a user is verified/authorized to upload to the dashboard
+            if (this.userApiKey !== "") { 
+                const postRes = await axios.post("", {
+                    status: response.status,
+                    url: this.apiURL
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": this.userApiKey
+                    }
+                });
+            }
+
             return { success: true, status: response.status }; // returns the above result
         } 
         catch (error) {
